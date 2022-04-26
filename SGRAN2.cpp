@@ -58,6 +58,29 @@ int SGRAN2::init(double p[], int n_args)
 		p20: grainEnv
 		p21: grainLimit=1500
 	*/
+
+/* NEW Args:
+		p0: inskip
+		p1: dur
+		p2: amp
+		p3: grainRateVarLow
+		p4: grainRateVarMid
+		p5: grainRateVarHigh
+		p6: grainRateVarTigh
+		p7: grainDurLow
+		p8: grainDurMid
+		p9: grainDurHigh
+		p10: grainDurTight
+		p11: freqLow
+		p12: freqMid
+		p13: freqHigh
+		p14: freqTight
+		p15: center
+		p16: radius
+		p17: wavetable
+		p18: grainEnv
+		p19: grainLimit=1500
+	*/
 	if (rtsetoutput(p[0], p[1], this) == -1)
 		return DONT_SCHEDULE;
 
