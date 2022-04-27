@@ -1,5 +1,6 @@
 #include <Ougens.h>
 #include <vector>
+#include "speakers.h"
 		  // the base class for this instrument
 typedef struct {
 	float waveSampInc; 
@@ -11,14 +12,15 @@ typedef struct {
 	float panL; 
 	int currTime; 
 	bool isplaying;
+	double gains[MAX_SPEAKERS]
 	} Grain;
 
 
-class SGRAN2 : public Instrument {
+class SGRAN2_NPAN : public Instrument {
 
 public:
-	SGRAN2();
-	virtual ~SGRAN2();
+	SGRAN2_NPAN();
+	virtual ~SGRAN2_NPAN();
 	virtual int init(double *, int);
 	virtual int configure();
 	virtual int run();
@@ -31,6 +33,12 @@ public:
 private:
 	bool configured;
 	int branch;
+
+	double radius;
+
+	int num_speakers;
+	double prev_angle, src_angle, src_distance, min_distance, src_x, src_y;
+	Speaker *speakers[MAX_SPEAKERS];
 
 	double freqLow;
 	double freqMid;

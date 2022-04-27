@@ -1,8 +1,8 @@
 ## About
-Stochastic granular synthesizers for RTcmix version 4.5 based on Dr. Mara Helmuth's SGRANR instrument, with added pfield control, improved performance, and additional buffer features.  SGRAN2 works with periodic waveforms while STGRAN2 works with a provided soundfile or live input signal.
+Stochastic granular synthesizers for RTcmix version 4.5 based on Dr. Mara Helmuth's SGRANR instrument, with added pfield control, improved performance, and additional buffer features.  SGRAN2_NPAN works with periodic waveforms while STGRAN2 works with a provided soundfile or live input signal.
 
 ## Examples
-### SGRAN2
+### SGRAN2_NPAN
 
 https://user-images.githubusercontent.com/69212477/147691785-44a433a8-5641-47cd-8736-3a59bc73df5a.mp4
 
@@ -24,7 +24,7 @@ Both instruments rely on Dr. Helmuth's `prob` function, which takes four floatin
 
 Every time a new grain spawns, multiple `prob` functions run to generate properties of that grain.  These include the time until the next grain, the duration of this grain, the frequency/transposition of this grain, and the panning of this grain.
 
-SGRAN2 creates grains from a user provided periodic wavefornm.
+SGRAN2_NPAN creates grains from a user provided periodic wavefornm.
 
 STGRAN2 works with a provided audio file or realtime audio source.  Grain start points are chosen randomly between the present and "buffer start size" (p20) seconds ago.  High p20 values result in the smearing of short impulses to long lasting clouds.  Extreme transpositions may be ignored so grains don't move "into the future", or go too far into the past.
 
@@ -34,7 +34,7 @@ Both apply a user provided windowing function for each grain.
 
 See the included scorefiles.
 
-### SGRAN2
+### SGRAN2_NPAN
 
 Args:  
     - p0: inskip  

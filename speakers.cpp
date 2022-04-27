@@ -104,7 +104,7 @@ static int compare_speaker_angles(const void *a, const void *b)
 // Instead, 0 is in front of the listener, where 90 degrees normally is.
 
 double
-SGRAN-NPAN_set_speakers(float p[], int nargs, double pp[])
+SGRAN_NPAN_set_speakers(float p[], int nargs, double pp[])
 {
    if (nargs < 5 || !(nargs % 2))
       return usage();

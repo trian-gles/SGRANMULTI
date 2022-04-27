@@ -1,6 +1,6 @@
 include package.conf
 
-NAME = SGRAN2
+NAME = SGRAN2_NPAN
 NAME2 = STGRAN2
 
 OBJS = $(NAME).o

@@ -1,5 +1,5 @@
 rtsetparams(44100, 2)
-load("./libSGRAN2.so")
+load("./libSGRAN2_NPAN.so")
 
         /* Args:
                 p0: inskip
@@ -55,7 +55,7 @@ panti = 0.4
 wave = maketable("wave", 1000, "square")
 env = src_env = maketable("window", 1000, "hanning")
 
-SGRAN2(inskip, dur, 800 * amp, ratelo, ratemid, ratehi, rateti, durlo, durmid, durhi, durti, 
+SGRAN2_NPAN(inskip, dur, 800 * amp, ratelo, ratemid, ratehi, rateti, durlo, durmid, durhi, durti, 
 freqlo, freqmid, freqhi, freqti, panlo, panmid, panhi, panti, wave, env)
 
 
