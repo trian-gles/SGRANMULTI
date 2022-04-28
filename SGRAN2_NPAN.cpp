@@ -268,6 +268,25 @@ void NPAN::setgains(Grain* grain)
 #endif
    const double pi_over_2 = PI_OVER_2;
 
+
+   // select a point randomly around the circle centered at the pan position
+   double offset_dist = srrand() * radius;
+   double offset_angle = srrand() * M_PI; 
+
+   // calculate the distance from the center for this point
+   double true_distance = sqrt(pow(src_distance) + pow(offset_dist) - 2 * src_distance * offset_dist * cos(offset_angle));
+   // the angle between this vector and the pan position vector
+   double angle2;
+   if (offset_dist < src_distance)
+   {
+   	angle2 = asin(offset_dist * sin(offset_angle) / true_distance);
+   }
+   else // finish this!!!
+   {
+   	angle2 = 180 - ();
+   }
+
+
    // Minimum distance from listener to source; don't get closer than this.
    if (src_distance < min_distance)
       src_distance = min_distance;
