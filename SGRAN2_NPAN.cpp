@@ -168,7 +168,7 @@ void SGRAN2_NPAN::setgains(Grain* grain)
 
    // select a point randomly around the circle centered at the pan position
    double offset_dist = (rrand() + 1) * radius / 2;
-   double offset_angle = (rrand() + 1) * M_PI / 2; 
+   double offset_angle = (rrand() + 1) * M_PI * 2; 
 
    // calculate the distance from the center for this point
    //double true_distance = sqrt(pow(src_distance) + pow(offset_dist) - 2 * src_distance * offset_dist * cos(offset_angle));
