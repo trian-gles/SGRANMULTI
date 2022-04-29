@@ -35,7 +35,7 @@ Speaker::~Speaker()
 // elements and the array itself.
 
 int
-NPAN_get_speakers(int *numspeakers, Speaker *speakers[], double *min_distance)
+SGRAN2_NPAN_get_speakers(int *numspeakers, Speaker *speakers[], double *min_distance)
 {
    if (_num_speakers == 0)
       return -1;
@@ -64,12 +64,12 @@ NPAN_get_speakers(int *numspeakers, Speaker *speakers[], double *min_distance)
 static double
 usage()
 {
-   return die("SGRAN_NPANspeakers", "Usage:\n"
-      "   SGRAN_NPANspeakers(\"polar\", "
+   return die("SGRAN2_NPANspeakers", "Usage:\n"
+      "   SGRAN2_NPANspeakers(\"polar\", "
           "spk1_angle, spk1_dist ... spkN_angle, spkN_dist)\n"
       "   (where 0 is directly in front of listener)\n"
       "or\n"
-      "   SGRAN_NPANspeakers(\"xy\", "
+      "   SGRAN2_NPANspeakers(\"xy\", "
           "spk1_x, spk1_y ... spkN_x, spkN_y)");
 }
 
@@ -104,7 +104,7 @@ static int compare_speaker_angles(const void *a, const void *b)
 // Instead, 0 is in front of the listener, where 90 degrees normally is.
 
 double
-SGRAN_NPAN_set_speakers(float p[], int nargs, double pp[])
+SGRAN2_NPAN_set_speakers(float p[], int nargs, double pp[])
 {
    if (nargs < 5 || !(nargs % 2))
       return usage();
@@ -117,9 +117,9 @@ SGRAN_NPAN_set_speakers(float p[], int nargs, double pp[])
 
    _num_speakers = (nargs - 1) / 2;
    if (_num_speakers < 2)
-      return die("SGRAN_NPANspeakers", "Must have at least 2 speakers.");
+      return die("SGRAN2_NPANspeakers", "Must have at least 2 speakers.");
    if (_num_speakers > MAX_SPEAKERS)
-      return die("SGRAN_NPANspeakers", "Can't have more than %d speakers.",
+      return die("SGRAN2_NPANspeakers", "Can't have more than %d speakers.",
                                                             MAX_SPEAKERS);
 
    _speakers = new Speaker * [_num_speakers];
@@ -167,7 +167,7 @@ SGRAN_NPAN_set_speakers(float p[], int nargs, double pp[])
    // check for two speakers having same angle
    for (int i = 0; i < _num_speakers; i++) {
       if (_speakers[i]->nextAngle() == _speakers[i]->angle())
-         return die("SGRAN_NPANspeakers", "Can't put two speakers in same location.");
+         return die("SGRAN2_NPANspeakers", "Can't put two speakers in same location.");
    }
 
    return 0.0;
@@ -178,7 +178,7 @@ SGRAN_NPAN_set_speakers(float p[], int nargs, double pp[])
 int
 profile()
 {
-   UG_INTRO("SGRAN_NPANspeakers", SGRAN-NPAN_set_speakers);
+   UG_INTRO("SGRAN2_NPANspeakers", SGRAN2_NPAN_set_speakers);
    return 0;
 }
 

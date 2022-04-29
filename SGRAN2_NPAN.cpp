@@ -10,11 +10,14 @@
 #include <rtdefs.h>
 #include <iostream>
 #include <vector>
+#include <float.h> 
 
 #define MAXGRAINS 1500
 
 #define TWO_PI       (M_PI * 2.0)
 #define PI_OVER_2    (M_PI / 2.0)
+
+#define DEBUG
 
 SGRAN2_NPAN::SGRAN2_NPAN() : branch(0)
 {
@@ -40,32 +43,6 @@ SGRAN2_NPAN::~SGRAN2_NPAN()
 
 int SGRAN2_NPAN::init(double p[], int n_args)
 {
-
-	/* Args:
-		p0: inskip
-		p1: dur
-		p2: amp
-		p3: grainRateVarLow
-		p4: grainRateVarMid
-		p5: grainRateVarHigh
-		p6: grainRateVarTigh
-		p7: grainDurLow
-		p8: grainDurMid
-		p9: grainDurHigh
-		p10: grainDurTight
-		p11: freqLow
-		p12: freqMid
-		p13: freqHigh
-		p14: freqTight
-		p15: panLow
-		p16: panMid
-		p17: panHigh
-		p18: panTight
-		p19: wavetable
-		p20: grainEnv
-		p21: grainLimit=1500
-	*/
-
 /* NEW Args:
 		p0: inskip
 		p1: dur
@@ -100,7 +77,7 @@ int SGRAN2_NPAN::init(double p[], int n_args)
 	else if (n_args > 20)
 		return die("SGRAN2_NPAN", "too many arguments");
 
-	if (NPAN_get_speakers(&num_speakers, speakers, &min_distance) == -1)
+	if (SGRAN2_NPAN_get_speakers(&num_speakers, speakers, &min_distance) == -1)
       return die("NPAN",
                  "Call NPANspeakers before NPAN to set up speaker locations.");
 	
@@ -167,12 +144,109 @@ double SGRAN2_NPAN::prob(double low,double mid,double high,double tight)
 	return(num);
 }
 
+// returns the smaller angle
+inline double sideangleside_toangle(double sideB, double angleA, double sideA)
+{
+	return asin(sideB * sin(angleA) / sideA);
+}
+
+// returns the missing side
+inline double sideangleside_toside(double sideB, double angleA, double sideC)
+{
+	return sqrt(pow(sideB, 2) + pow(sideC, 2) - 2 * sideB * sideC * cos(angleA));
+}
+
+void SGRAN2_NPAN::setgains(Grain* grain)
+{
+//#ifdef DEBUG
+//   rtcmix_advise("NPAN", "----------------------------------------------------------");
+//   rtcmix_advise("NPAN", "src: x=%f, y=%f, angle=%g, dist=%g",
+//      src_x, src_y, src_angle / TWO_PI * 360.0, src_distance);
+//#endif
+   const double pi_over_2 = PI_OVER_2;
+
+
+   // select a point randomly around the circle centered at the pan position
+   double offset_dist = (rrand() + 1) * radius / 2;
+   double offset_angle = (rrand() + 1) * M_PI / 2; 
+
+   // calculate the distance from the center for this point
+   //double true_distance = sqrt(pow(src_distance) + pow(offset_dist) - 2 * src_distance * offset_dist * cos(offset_angle));
+   double true_distance = sideangleside_toside(src_distance, offset_angle, offset_dist);
+
+
+
+   // the angle between this vector and the pan position vector
+   double true_angle;
+   if (offset_dist < src_distance)
+   {
+   	//angle2 = asin(offset_dist * sin(offset_angle) / true_distance);
+	   true_angle = sideangleside_toangle(offset_dist, offset_angle, true_distance);
+   }
+   else // finish this!!!
+   {
+		true_angle = M_PI - sideangleside_toangle(src_distance, offset_angle, true_distance);
+   }
+
+
+   // Minimum distance from listener to source; don't get closer than this.
+   if (true_distance < min_distance)
+      true_distance = min_distance;
+
+	#ifdef DEBUG
+		std::cout << "Base distance : " << src_distance << " , Base angle " << src_angle << " \n";
+		std::cout << "Offset distane : " << offset_dist << " , Offset angle " << offset_angle << " \n";
+		std::cout << "Grain distance : " << true_distance << ", Grain angle " << true_angle << " \n";
+	#endif
+
+   // Speakers are guaranteed to be in ascending angle order, from -PI to PI.
+   for (int i = 0; i < num_speakers; i++) {
+      const double spk_angle = speakers[i]->angle();
+      const double spk_prev_angle = speakers[i]->prevAngle();
+      const double spk_next_angle = speakers[i]->nextAngle();
+
+      // Handle angle wraparound for first and last speakers
+      double source_angle = true_angle;
+      if (i == 0 && true_angle > 0.0)
+         source_angle -= TWO_PI;
+      else if (i == num_speakers - 1 && true_angle < 0.0)
+         source_angle += TWO_PI;
+
+      if (source_angle > spk_prev_angle && source_angle < spk_next_angle) {
+         // then this speaker gets some signal
+
+         // Scale difference between src angle and speaker angle so that
+         // max range is [0, 1].
+         double scale;
+         if (source_angle < spk_angle)
+            scale = (spk_angle - spk_prev_angle) / pi_over_2;
+         else
+            scale = (spk_next_angle - spk_angle) / pi_over_2;
+         const double diff = fabs(source_angle - spk_angle) / scale;
+
+         // Gain is combination of src angle and distance, rel. to speaker.
+         const double distfactor = speakers[i]->distance() / true_distance;
+
+         grain->gains[i] = cos(diff) * distfactor;
+      }
+      else
+         grain->gains[i] = 0;
+
+//#ifdef DEBUG
+//      rtcmix_advise("NPAN", "speaker[%d]: chan=%d, angle=%g, dist=%g, gain=%.12f",
+//             i, speakers[i]->channel(), speakers[i]->angleDegrees(),
+//             speakers[i]->distance(), speakers[i]->gain());
+//#endif
+   }
+}
+
 // set new parameters and turn on an idle grain
 void SGRAN2_NPAN::resetgrain(Grain* grain)
 {
 	float freq = cpsmidi((float)prob(midicps(freqLow), midicps(freqMid), midicps(freqHigh), freqTight));
 	float grainDurSamps = (float) prob(grainDurLow, grainDurMid, grainDurHigh, grainDurTight) * SR;
-	float panR = (float) prob(panLow, panMid, panHigh, panTight);
+	//float panR = (float) prob(panLow, panMid, panHigh, panTight);
+	setgains(grain);
 	grain->waveSampInc = wavetableLen * freq / SR;
 	grain->ampSampInc = ((float)grainEnvLen) / grainDurSamps;
 	grain->currTime = 0;
@@ -184,6 +258,10 @@ void SGRAN2_NPAN::resetgrain(Grain* grain)
 	(*grain).dur = (int)round(grainDurSamps);
 	//std::cout<<"sending grain with freq : " << freq << " dur : " << grain->dur << " panR " << panR << "\n";
 
+	for (int i = 0; i < MAX_SPEAKERS; i++)
+	#ifdef DEBUG
+		std::cout << "Grain gain for channel " << i << " = " << grain->gains[i] << " \n";
+	#endif
 }
 
 void SGRAN2_NPAN::resetgraincounter()
@@ -232,8 +310,8 @@ void SGRAN2_NPAN::doupdate()
 
 
 	// NPAN STUFF
-	double angle = p[5];
-      const double dist = p[6];
+	double angle = p[15];
+      const double dist = p[16];
       if (angle != prev_angle || dist != src_distance) {
          prev_angle = angle;
          angle += 90.0;                               // user -> internal
@@ -243,6 +321,8 @@ void SGRAN2_NPAN::doupdate()
          src_x = cos(src_angle) * dist;
          src_y = sin(src_angle) * dist;
 	  }
+
+	radius = (double)p[17];
 
 
 	// END NPAN
@@ -259,92 +339,19 @@ void SGRAN2_NPAN::doupdate()
 
 }
 
-void NPAN::setgains(Grain* grain)
-{
-#ifdef DEBUG
-   rtcmix_advise("NPAN", "----------------------------------------------------------");
-   rtcmix_advise("NPAN", "src: x=%f, y=%f, angle=%g, dist=%g",
-      src_x, src_y, src_angle / TWO_PI * 360.0, src_distance);
-#endif
-   const double pi_over_2 = PI_OVER_2;
 
-
-   // select a point randomly around the circle centered at the pan position
-   double offset_dist = srrand() * radius;
-   double offset_angle = srrand() * M_PI; 
-
-   // calculate the distance from the center for this point
-   double true_distance = sqrt(pow(src_distance) + pow(offset_dist) - 2 * src_distance * offset_dist * cos(offset_angle));
-   // the angle between this vector and the pan position vector
-   double angle2;
-   if (offset_dist < src_distance)
-   {
-   	angle2 = asin(offset_dist * sin(offset_angle) / true_distance);
-   }
-   else // finish this!!!
-   {
-   	angle2 = 180 - ();
-   }
-
-
-   // Minimum distance from listener to source; don't get closer than this.
-   if (src_distance < min_distance)
-      src_distance = min_distance;
-
-   // Speakers are guaranteed to be in ascending angle order, from -PI to PI.
-   for (int i = 0; i < num_speakers; i++) {
-      const double spk_angle = speakers[i]->angle();
-      const double spk_prev_angle = speakers[i]->prevAngle();
-      const double spk_next_angle = speakers[i]->nextAngle();
-
-      // Handle angle wraparound for first and last speakers
-      double source_angle = src_angle;
-      if (i == 0 && src_angle > 0.0)
-         source_angle -= TWO_PI;
-      else if (i == num_speakers - 1 && src_angle < 0.0)
-         source_angle += TWO_PI;
-
-      if (source_angle > spk_prev_angle && source_angle < spk_next_angle) {
-         // then this speaker gets some signal
-
-         // Scale difference between src angle and speaker angle so that
-         // max range is [0, 1].
-         double scale;
-         if (source_angle < spk_angle)
-            scale = (spk_angle - spk_prev_angle) / pi_over_2;
-         else
-            scale = (spk_next_angle - spk_angle) / pi_over_2;
-         const double diff = fabs(source_angle - spk_angle) / scale;
-
-         // Gain is combination of src angle and distance, rel. to speaker.
-         const double distfactor = speakers[i]->distance() / src_distance;
-
-         grain->gains[i] = cos(diff) * distfactor;
-      }
-      else
-         grain->gains[i] = 0;
-
-#ifdef DEBUG
-      rtcmix_advise("NPAN", "speaker[%d]: chan=%d, angle=%g, dist=%g, gain=%.12f",
-             i, speakers[i]->channel(), speakers[i]->angleDegrees(),
-             speakers[i]->distance(), speakers[i]->gain());
-#endif
-   }
-}
 
 
 int SGRAN2_NPAN::run()
 {
-	float out[2];
+	const int outchans = outputChannels();
+    float out[outchans];
 	for (int i = 0; i < framesToRun(); i++) {
 		if (--branch <= 0)
 		{
 		doupdate();
 		branch = getSkip();
 		}
-
-		out[0] = 0;
-		out[1] = 0;
 		for (size_t j = 0; j < grains->size(); j++)
 		{
 			Grain* currGrain = (*grains)[j];
@@ -359,8 +366,8 @@ int SGRAN2_NPAN::run()
 					// should include an interpolation option at some point
 					float grainAmp = oscili(1, currGrain->ampSampInc, grainEnv, grainEnvLen, &((*currGrain).ampPhase));
 					float grainOut = oscili(grainAmp,currGrain->waveSampInc, wavetable, wavetableLen, &((*currGrain).wavePhase));
-					out[0] += grainOut * currGrain->panL;
-					out[1] += grainOut * currGrain->panR;
+					for (int k = 0; k < outchans; k++)
+						out[k] += grainOut * currGrain->gains[k];
 				}
 			}
 			// this is not an else statement so a grain can be potentially stopped and restarted on the same frame
@@ -382,8 +389,8 @@ int SGRAN2_NPAN::run()
 			resetgraincounter();
 		}
 
-		out[0] *= amp;
-		out[1] *= amp;
+		for (size_t j = 0; j < outchans; j++)
+			out[j] *= amp;
 		rtaddout(out);
 		newGrainCounter--;
 		increment();

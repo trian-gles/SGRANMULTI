@@ -12,7 +12,7 @@ typedef struct {
 	float panL; 
 	int currTime; 
 	bool isplaying;
-	double gains[MAX_SPEAKERS]
+	double gains[MAX_SPEAKERS];
 	} Grain;
 
 
@@ -29,6 +29,10 @@ public:
 	void resetgrain(Grain* grain);
 	void resetgraincounter();
 	int calcgrainsrequired();
+
+	void setgains(Grain* grain);
+	inline double anglesideangle(double angle1, double side, double angle2);
+	inline double sideangleside(double side1, double angle, double side2);
 
 private:
 	bool configured;
