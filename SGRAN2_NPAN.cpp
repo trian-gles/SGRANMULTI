@@ -69,8 +69,7 @@ int SGRAN2_NPAN::init(double p[], int n_args)
 	if (rtsetoutput(p[0], p[1], this) == -1)
 		return DONT_SCHEDULE;
 
-	if (outputChannels() > 2)
-	      return die("SGRAN2_NPAN", "Output must be mono or stereo.");
+	
 
 	if (n_args < 20)
 		return die("SGRAN2_NPAN", "19 arguments are required");
@@ -80,6 +79,9 @@ int SGRAN2_NPAN::init(double p[], int n_args)
 	if (SGRAN2_NPAN_get_speakers(&num_speakers, speakers, &min_distance) == -1)
       return die("NPAN",
                  "Call NPANspeakers before NPAN to set up speaker locations.");
+
+	if (outputChannels() != num_speakers)
+	      return die("SGRAN2_NPAN", "Ouput channels must match number of speakers");
 	
 	grainEnvLen = 0;
 	wavetableLen = 0;
@@ -170,6 +172,9 @@ void SGRAN2_NPAN::setgains(Grain* grain)
    double offset_dist = (rrand() + 1) * radius / 2;
    double offset_angle = (rrand() + 1) * M_PI * 2; 
 
+   //double offset_dist = 6;
+   //double offset_angle = 3;
+
    // calculate the distance from the center for this point
    //double true_distance = sqrt(pow(src_distance) + pow(offset_dist) - 2 * src_distance * offset_dist * cos(offset_angle));
    double true_distance = sideangleside_toside(src_distance, offset_angle, offset_dist);
@@ -180,13 +185,16 @@ void SGRAN2_NPAN::setgains(Grain* grain)
    double true_angle;
    if (offset_dist < src_distance)
    {
-   	//angle2 = asin(offset_dist * sin(offset_angle) / true_distance);
+   	// angle2 = asin(offset_dist * sin(offset_angle) / true_distance);
 	   true_angle = sideangleside_toangle(offset_dist, offset_angle, true_distance);
    }
    else // finish this!!!
    {
 		true_angle = M_PI - sideangleside_toangle(src_distance, offset_angle, true_distance);
    }
+
+   //double true_distance = 4;
+   //double true_angle = 1;
 
 
    // Minimum distance from listener to source; don't get closer than this.
@@ -228,6 +236,7 @@ void SGRAN2_NPAN::setgains(Grain* grain)
          const double distfactor = speakers[i]->distance() / true_distance;
 
          grain->gains[i] = cos(diff) * distfactor;
+		 //std::cout<<"activating channel " << i << "\n";
       }
       else
          grain->gains[i] = 0;
@@ -345,8 +354,12 @@ void SGRAN2_NPAN::doupdate()
 int SGRAN2_NPAN::run()
 {
 	const int outchans = outputChannels();
-    float out[outchans];
+    
 	for (int i = 0; i < framesToRun(); i++) {
+		float out[outchans];
+		for (size_t k = 0; k < outchans; k++)
+			out[k] = 0;
+
 		if (--branch <= 0)
 		{
 		doupdate();
@@ -367,7 +380,7 @@ int SGRAN2_NPAN::run()
 					float grainAmp = oscili(1, currGrain->ampSampInc, grainEnv, grainEnvLen, &((*currGrain).ampPhase));
 					float grainOut = oscili(grainAmp,currGrain->waveSampInc, wavetable, wavetableLen, &((*currGrain).wavePhase));
 					for (int k = 0; k < outchans; k++)
-						out[k] += grainOut * currGrain->gains[k];
+						out[speakers[k]->channel()] += grainOut * currGrain->gains[k];
 				}
 			}
 			// this is not an else statement so a grain can be potentially stopped and restarted on the same frame

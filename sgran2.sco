@@ -1,4 +1,5 @@
-rtsetparams(44100, 2)
+rtsetparams(44100, 8)
+rtoutput("sgran2_8chan.wav")
 load("./libSGRAN2_NPAN.so")
 
         /* NEW Args:
@@ -44,9 +45,9 @@ freqmid = maketable("line", "nonorm", 200, 0, 430, 1, 350, 2, 600)
 freqhi = maketable("line", "nonorm", 200, 0, 440, 1, 460, 2, 800)
 freqti = maketable("line", "nonorm", 200, 0, 6, 1, 0.2)
 
-angle = 30
-distance = 4
-radius = 2
+angle = maketable("line", "nonorm", 1000, 0,0, 1,360)
+distance = 1
+radius = 6
 
 wave = maketable("wave", 1000, "square")
 env = src_env = maketable("window", 1000, "hanning")
@@ -61,7 +62,7 @@ SGRAN2_NPANspeakers("polar",
         0, 1,   // front center
       180, 1) 
 
-SGRAN2_NPAN(inskip, dur, 8 * amp, ratelo, ratemid, ratehi, rateti, durlo, durmid, durhi, durti, 
+SGRAN2_NPAN(inskip, dur, 200 * amp, ratelo, ratemid, ratehi, rateti, durlo, durmid, durhi, durti, 
 freqlo, freqmid, freqhi, freqti, angle, distance, radius, wave, env)
 
 
