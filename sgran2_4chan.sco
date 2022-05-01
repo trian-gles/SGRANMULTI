@@ -1,4 +1,4 @@
-rtsetparams(44100, 8)
+rtsetparams(44100, 4)
 set_option("clobber_on")
 rtoutput("sgran2_8chan.wav")
 load("./libSGRAN2_NPAN.so")
@@ -36,34 +36,30 @@ ratemid = maketable("line", "nonorm", 200, 0, 0.0008, 1, 0.00008)
 ratehi = maketable("line", "nonorm", 200, 0, 0.004, 1, 0.0004)
 rateti = maketable("line", "nonorm", 200, 0, 8, 1, 0.2)
 
-durlo = 0.1
+durlo = 0.01
 durmid = 0.5
 durhi = 0.8
-durti = 0.1
+durti = 0.6
 
 freqlo = maketable("line", "nonorm", 200, 0, 400, 1, 200)
 freqmid = maketable("line", "nonorm", 200, 0, 430, 1, 350, 2, 600)
 freqhi = maketable("line", "nonorm", 200, 0, 440, 1, 460, 2, 800)
 freqti = maketable("line", "nonorm", 200, 0, 6, 1, 0.2)
 
-angle = maketable("line", "nonorm", 1000, 0,0, 1,360)
+angle = 0// maketable("line", "nonorm", 1000, 0,0, 1,-360)
 distance = 1
-radius = maketable("line", "nonorm", 1000, 0,0, 1,6)
+radius = 0// maketable("line", "nonorm", 1000, 0,1, 1,0)
 
-wave = maketable("wave", 1000, "square")
+wave = maketable("wave", 1000, "sine")
 env = src_env = maketable("window", 1000, "hanning")
 
 SGRAN2_NPANspeakers("polar",
-       45, 1,   // front left
-      -45, 1,   // front right
-       90, 1,   // side left
-      -90, 1,   // side right
-      135, 1,   // rear left
-     -135, 1,   // rear right rear
-        0, 1,   // front center
-      180, 1) 
+       45, 1,     // left front
+      -45, 1,     // right front
+       135, 1,    // left rear
+      -135, 1)    // right rear
 
-SGRAN2_NPAN(inskip, dur, 200 * amp, ratelo, ratemid, ratehi, rateti, durlo, durmid, durhi, durti, 
+SGRAN2_NPAN(inskip, dur, 800 * amp, ratelo, ratemid, ratehi, rateti, durlo, durmid, durhi, durti, 
 freqlo, freqmid, freqhi, freqti, angle, distance, radius, wave, env)
 
 

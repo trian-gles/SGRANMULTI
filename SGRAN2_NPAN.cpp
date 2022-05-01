@@ -267,8 +267,9 @@ void SGRAN2_NPAN::resetgrain(Grain* grain)
 	(*grain).dur = (int)round(grainDurSamps);
 	//std::cout<<"sending grain with freq : " << freq << " dur : " << grain->dur << " panR " << panR << "\n";
 
-	for (int i = 0; i < MAX_SPEAKERS; i++)
+	
 	#ifdef DEBUG
+	for (int i = 0; i < num_speakers; i++)
 		std::cout << "Grain gain for channel " << i << " = " << grain->gains[i] << " \n";
 	#endif
 }
