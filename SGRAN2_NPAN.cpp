@@ -17,7 +17,7 @@
 #define TWO_PI       (M_PI * 2.0)
 #define PI_OVER_2    (M_PI / 2.0)
 
-#define DEBUG
+//#define DEBUG
 
 SGRAN2_NPAN::SGRAN2_NPAN() : branch(0)
 {
@@ -192,6 +192,8 @@ void SGRAN2_NPAN::setgains(Grain* grain)
    {
 		true_angle = M_PI - sideangleside_toangle(src_distance, offset_angle, true_distance);
    }
+
+   true_angle += src_angle;
 
    //double true_distance = 4;
    //double true_angle = 1;
