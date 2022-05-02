@@ -64,16 +64,18 @@ int SGRAN2_NPAN::init(double p[], int n_args)
 		p17: radius
 		p18: wavetable
 		p19: grainEnv
-		p20: grainLimit=1500
+		p20: mode "polar" or "xy" (or "cartesian")
+		p21: grainLimit=1500
+		
 	*/
 	if (rtsetoutput(p[0], p[1], this) == -1)
 		return DONT_SCHEDULE;
 
 	
 
-	if (n_args < 20)
+	if (n_args < 21)
 		return die("SGRAN2_NPAN", "19 arguments are required");
-	else if (n_args > 20)
+	else if (n_args > 22)
 		return die("SGRAN2_NPAN", "too many arguments");
 
 	if (SGRAN2_NPAN_get_speakers(&num_speakers, speakers, &min_distance) == -1)
@@ -93,9 +95,9 @@ int SGRAN2_NPAN::init(double p[], int n_args)
 	wavetable = (double *) getPFieldTable(18, &wavetableLen);
 	grainEnv = (double *) getPFieldTable(19, &grainEnvLen);
 
-	if (n_args > 20)
+	if (n_args > 21)
 	{
-		grainLimit = p[20];
+		grainLimit = p[21];
 		if (grainLimit > MAXGRAINS)
 		{
 			rtcmix_advise("STGRAN2", "user provided max grains exceeds limit, lowering to 1500");
@@ -106,7 +108,20 @@ int SGRAN2_NPAN::init(double p[], int n_args)
 	else
 		grainLimit = MAXGRAINS;
 
+	mode = getmode();
+
 	return nSamps();
+}
+
+int SGRAN2_NPAN::getmode()
+{
+   const PField &field = getPField(20);
+   const char *str = field.stringValue(0);
+   if (str == NULL)
+      return -1;
+   if (strncmp(str, "pol", 3) == 0)
+      return PolarMode;
+   return CartesianMode;
 }
 
 
@@ -322,7 +337,8 @@ void SGRAN2_NPAN::doupdate()
 
 
 	// NPAN STUFF
-	double angle = p[15];
+	if (mode == PolarMode) {
+	  double angle = p[15];
       const double dist = p[16];
       if (angle != prev_angle || dist != src_distance) {
          prev_angle = angle;
@@ -333,7 +349,18 @@ void SGRAN2_NPAN::doupdate()
          src_x = cos(src_angle) * dist;
          src_y = sin(src_angle) * dist;
 	  }
-
+	}
+	else {
+		
+		 const double x = p[15];
+         const double y = p[16];
+		 if (x != src_x || y != src_y) {
+			src_x = x;
+			src_y = y;
+			src_angle = atan2(src_y, src_x);
+			src_distance = sqrt((src_x * src_x) + (src_y * src_y));
+		 }
+	}
 	radius = (double)p[17];
 
 

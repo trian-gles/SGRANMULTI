@@ -64,6 +64,6 @@ SGRAN2_NPANspeakers("polar",
       180, 1) 
 
 SGRAN2_NPAN(inskip, dur, 200 * amp, ratelo, ratemid, ratehi, rateti, durlo, durmid, durhi, durti, 
-freqlo, freqmid, freqhi, freqti, angle, distance, radius, wave, env)
+freqlo, freqmid, freqhi, freqti, angle, distance, radius, wave, env, "polar")
 
 

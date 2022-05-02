@@ -29,18 +29,22 @@ public:
 	void resetgrain(Grain* grain);
 	void resetgraincounter();
 	int calcgrainsrequired();
+	int getmode();
 
 	void setgains(Grain* grain);
 	inline double anglesideangle(double angle1, double side, double angle2);
 	inline double sideangleside(double side1, double angle, double side2);
 
 private:
+	enum { PolarMode = 0, CartesianMode = 1 };
+
 	bool configured;
 	int branch;
 
 	double radius;
 
 	int num_speakers;
+	int mode;
 	double prev_angle, src_angle, src_distance, min_distance, src_x, src_y;
 	Speaker *speakers[MAX_SPEAKERS];
 
