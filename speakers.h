@@ -30,4 +30,6 @@ private:
    double _gain;
 };
 
-int SGRAN2_NPAN_get_speakers(int *, Speaker *[], double *);
+int SGRAN2MULTI_get_speakers(int *, Speaker *[], double *);
+
+int STGRAN2MULTI_get_speakers(int *, Speaker *[], double *);

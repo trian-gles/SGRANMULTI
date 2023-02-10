@@ -1,10 +1,10 @@
 include package.conf
 
-NAME = SGRAN2_NPAN
-NAME2 = STGRAN2
+NAME = SGRAN2MULTI
+NAME2 = STGRAN2MULTI
 
 OBJS = $(NAME).o speakers.o
-OBJS2 = $(NAME2).o 
+OBJS2 = $(NAME2).o speakers.o
 CMIXOBJS += $(PROFILE_O)
 CXXFLAGS += -I. -Wall 
 PROGS = $(NAME) lib$(NAME).so $(NAME2) lib$(NAME2).so
