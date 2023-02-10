@@ -1,18 +1,10 @@
 ## About
-Stochastic granular synthesizers for RTcmix version 4.5 based on Dr. Mara Helmuth's SGRANR instrument, with added pfield control, improved performance, and additional buffer features.  SGRAN2MULTI works with periodic waveforms while STGRAN2 works with a provided soundfile or live input signal.
+multichannel per-grain panning of SGRAN2 and STGRAN2.  More documentation coming soon
 
 ## Examples
 ### SGRAN2MULTI
+### STGRAN2MULTI
 
-https://user-images.githubusercontent.com/69212477/147691785-44a433a8-5641-47cd-8736-3a59bc73df5a.mp4
-
-https://user-images.githubusercontent.com/69212477/147691891-53d72308-b080-4f00-8393-49e684ce733b.mp4
-
-### STGRAN2
-
-https://user-images.githubusercontent.com/69212477/148407993-227b08c9-a545-46cc-b253-875c567a8963.mp4
-
-https://user-images.githubusercontent.com/69212477/148408034-002d62c7-b3ef-4b4c-9067-4aa3a63c321d.mp4
 
 
 
@@ -26,7 +18,7 @@ Every time a new grain spawns, multiple `prob` functions run to generate propert
 
 SGRAN2MULTI creates grains from a user provided periodic wavefornm.
 
-STGRAN2 works with a provided audio file or realtime audio source.  Grain start points are chosen randomly between the present and "buffer start size" (p20) seconds ago.  High p20 values result in the smearing of short impulses to long lasting clouds.  Extreme transpositions may be ignored so grains don't move "into the future", or go too far into the past.
+STGRAN2MULTI works with a provided audio file or realtime audio source.  Grain start points are chosen randomly between the present and "buffer start size" (p20) seconds ago.  High p20 values result in the smearing of short impulses to long lasting clouds.  Extreme transpositions may be ignored so grains don't move "into the future", or go too far into the past.
 
 See [TRANS usage notes](http://rtcmix.org/reference/instruments/TRANS.php#usage_notes) regarding dynamically updating STGRAN2 transposition values.
 
