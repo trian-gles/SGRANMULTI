@@ -50,9 +50,10 @@ transmid = 0
 transhi = 1.00
 transtight = maketable("line", "nonorm", 1000, 0, 2, 1, 0.1)
 
-angle = 270 //maketable("line", "nonorm", 1000, 0, 0, 1, 360)
+angle = maketable("line", "nonorm", 1000, 0, 0, 1, 720) + 180
 distance = 1 //maketable("line", "nonorm", 1000, 0,5, 1, 1)
 radius = 4//maketable("line", "nonorm", 1000, 0,5, 4, 0, 8, .1)
+
 
 env =  maketable("line", "nonorm", 10000, 0,0, 1,1, 20, 0.1, 1600, 0.1, 1700, 0)
 

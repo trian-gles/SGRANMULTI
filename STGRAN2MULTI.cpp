@@ -18,7 +18,7 @@
 #define TWO_PI       (M_PI * 2.0)
 #define PI_OVER_2    (M_PI / 2.0)
 
-
+//#define DEBUG
 
 AUDIOBUFFER::AUDIOBUFFER(int size): _full(false), _head(0)
 {
@@ -464,8 +464,8 @@ void STGRAN2MULTI::doupdate()
 
 	// NPAN STUFF
 	if (mode == PolarMode) {
-	  double angle = p[15];
-      double dist = p[16];
+	  double angle = p[16];
+      double dist = p[17];
       if (angle != prev_angle || dist != src_distance) {
 		if (dist < 0) {
 			dist *= -1;
@@ -482,8 +482,8 @@ void STGRAN2MULTI::doupdate()
 	}
 	else {
 		
-		 const double x = p[15];
-         const double y = p[16];
+		 const double x = p[16];
+         const double y = p[17];
 		 if (x != src_x || y != src_y) {
 			src_x = x;
 			src_y = y;
@@ -494,7 +494,7 @@ void STGRAN2MULTI::doupdate()
 
 
 	// END NPAN
-	radius = (double)p[17];
+	radius = (double)p[18];
 
 }
 
