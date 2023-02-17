@@ -1,5 +1,5 @@
 .DS_STORE
-.local_scores/
+local_scores/
 *.o
 *.so
 *.wav
