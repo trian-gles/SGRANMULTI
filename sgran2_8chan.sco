@@ -49,9 +49,9 @@ freqmid = maketable("line", "nonorm", 200, 0, 430, 1, 350, 2, 600, 4, 600)
 freqhi = maketable("line", "nonorm", 200, 0, 440, 1, 460, 2, 900, 4, 900)
 freqti = 1//maketable("line", "nonorm", 200, 0, 6, 1, 0.2, 2, 1)
 
-angle = 0
+angle = maketable("line", "nonorm", 1000, 0, 0, 1, 360)
 distance = 1 //maketable("line", "nonorm", 1000, 0,5, 1, 1)
-radius = 0//maketable("line", "nonorm", 1000, 0,5, 4, 0, 8, .1)
+radius = 0.4//maketable("line", "nonorm", 1000, 0,5, 4, 0, 8, .1)
 
 wave = maketable("wave", 1000, "square")
 env =  maketable("line", "nonorm", 10000, 0,0, 1,1, 20, 0.1, 1600, 0.1, 1700, 0)
