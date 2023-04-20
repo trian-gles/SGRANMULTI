@@ -6,25 +6,28 @@ load("./libSGRAN2MULTI.so")
         /* NEW Args:
 		p0: inskip
 		p1: dur
-		p2: amp
-		p3: grainRateVarLow
-		p4: grainRateVarMid
-		p5: grainRateVarHigh
-		p6: grainRateVarTigh
-		p7: grainDurLow
-		p8: grainDurMid
-		p9: grainDurHigh
-		p10: grainDurTight
-		p11: freqLow
-		p12: freqMid
-		p13: freqHigh
-		p14: freqTight
-		p15: angle
-		p16: distance
-		p17: radius
-		p18: wavetable
-		p19: grainEnv
+		p2: amp*
+		p3: grainRateVarLow*
+		p4: grainRateVarMid*
+		p5: grainRateVarHigh*
+		p6: grainRateVarTigh*
+		p7: grainDurLow*
+		p8: grainDurMid*
+		p9: grainDurHigh*
+		p10: grainDurTight*
+		p11: freqLow*
+		p12: freqMid*
+		p13: freqHigh*
+		p14: freqTight*
+		p15: emission angle, 0 = directly in front of listener*
+		p16: distance from listener in feet*
+		p17: radius, spread over which grains are placed, in feet*
+		p18: wavetable**
+		p19: grainEnv**
 		p20: grainLimit=1500
+		
+		* may receive pField control
+		** must receive pField table
 	*/
 inskip = 0
 dur = 10

@@ -8,26 +8,29 @@ load("./libSTGRAN2MULTI.so")
 		p0: inskip
 		p1: outskip
 		p2: dur
-		p3: amp
-		p4: grainRateVarLow
-		p5: grainRateVarMid
-		p6: grainRateVarHigh
-		p7: grainRateVarTigh
-		p8: grainDurLow
-		p9: grainDurMid
-		p10: grainDurHigh
-		p11: grainDurTight
-		p12: transLow (cents)
-		p13: transMid
-		p14: transHigh
-		p15: transTight
-		p16: angle
-		p17: distance
-		p18: radius
-		p19: grainEnv
+		p3: amp*
+		p4: grainRateVarLow*
+		p5: grainRateVarMid*
+		p6: grainRateVarHigh*
+		p7: grainRateVarTigh*
+		p8: grainDurLow*
+		p9: grainDurMid*
+		p10: grainDurHigh*
+		p11: grainDurTight*
+		p12: transLow (cents)*
+		p13: transMid*
+		p14: transHigh*
+		p15: transTight*
+		p16: emission angle, 0 = directly in front of listener*
+		p17: distance from listener in feet*
+		p18: radius, spread over which grains are placed, in feet*
+		p19: grainEnv**
 		p20: mode "polar" or "xy" (or "cartesian")
 		p21: bufferSize=1
 		p22: grainLimit=1500
+		
+		* may receive pField control
+		** must receive pField table
 	*/
 inskip = 0
 outskip = 0
