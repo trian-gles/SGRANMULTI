@@ -444,12 +444,6 @@ void STGRAN2MULTI::doupdate()
 	transHigh = octpch((double)p[14]); if (transHigh < transMid) transHigh = transMid;
 	transTight = octpch((double)p[15]);
 
-
-	panLow = (double)p[16];
-	panMid = (double)p[17]; if (panMid < panLow) panMid = panLow;
-	panHigh = (double)p[18]; if (panHigh < panMid) panHigh = panMid;
-	panTight = (double)p[19];
-
 	if (_nargs > 21)
 	{
 		int bufferSize = (int) floor(SR * p[21]);

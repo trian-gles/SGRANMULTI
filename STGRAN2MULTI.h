@@ -81,11 +81,6 @@ private:
 	double grainDurHigh;
 	double grainDurTight;
 
-	double panLow;
-	double panMid;
-	double panHigh;
-	double panTight;
-
 	float amp;
 
 	std::vector<Grain*>* grains;
