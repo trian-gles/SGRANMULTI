@@ -27,8 +27,11 @@ See the included scorefiles.
 ### SGRAN2speakers/STGRAN2speakers
 Must be called to position speakers prior to calling the instrument itself
 (taken directly from NPAN documentation)
+   
    p0 = mode ("polar" or "xy" (or "cartesian"))
+  
    p1, p2, ... pN-1, pN
+     
       starting with p1, the next N pfields are pairs specifying the locations
       of the virtual speakers, using angle/distance coordinates (for "polar"
       mode) or x-location/y-location (for "xy" or "cartesian" mode).  Distances
