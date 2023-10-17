@@ -37,18 +37,18 @@ Args :
 ### SGRAN2MULTI
 
 Args:  
-    - p0: inskip  
-    - p1: duration
-    - p2: amplitude*  
-    - p3-6: rate values (seconds before the next grain grain)* 
-    - p7-10: duration values (length of grain in seconds)*
-    - p11-14: pitch values (Hz or oct.pc)*
-    - p15: pan angle*
-    - p16: pan distance*
-    - p17: pan radius*
-    - p18: synthesis waveform**  
-    - p19: grain amplitude envelope**  
-    - p20: maximum concurrent grains [optional; default is 1500]
+- p0: inskip
+- p1: duration
+- p2: amplitude*  
+- p3-6: rate values (seconds before the next grain grain)* 
+- p7-10: duration values (length of grain in seconds)*
+- p11-14: pitch values (Hz or oct.pc)*
+- p15: pan angle*
+- p16: pan distance*
+- p17: pan radius*
+- p18: synthesis waveform**  
+- p19: grain amplitude envelope**  
+- p20: maximum concurrent grains [optional; default is 1500]
     
 \* may receive a reference to a pfield handle  
 \*\* must receive a reference to a pfield maketable handle storing a wavetable or envelope
@@ -57,19 +57,19 @@ Args:
 ### STGRAN2MULTI
 
 Args:  
-    - p0: inskip  
-    - p1: outskip
-    - p2: dur  
-    - p3: amp* 
-    - p4-7: rate values (seconds before the next grain grain)* 
-    - p8-11: duration values (length of grain in seconds)*
-    - p12-15: transposition values (oct.pc)*
-    - p16: pan angle*
-    - p17: pan distance*
-    - p18: pan radius*
-    - p19: grain amplitude envelope**
-    - p20: size of the buffer used to choose grain start points [optional; default is 1]*
-    - p21: maximum concurrent grains [optional; default is 1500]
+- p0: inskip  
+- p1: outskip
+- p2: dur  
+- p3: amp* 
+- p4-7: rate values (seconds before the next grain grain)* 
+- p8-11: duration values (length of grain in seconds)*
+- p12-15: transposition values (oct.pc)*
+- p16: pan angle*
+- p17: pan distance*
+- p18: pan radius*
+- p19: grain amplitude envelope**
+- p20: size of the buffer used to choose grain start points [optional; default is 1]*
+- p21: maximum concurrent grains [optional; default is 1500]
     
 \* may receive a reference to a pfield handle  
 \*\* must receive a reference to a pfield maketable handle storing an envelope
