@@ -1,3 +1,6 @@
+#SGRANMULTI
+
+
 ## About
 Multichannel per-grain panning of SGRAN2 and STGRAN2 with help from John Gibson's NPAN code
 
