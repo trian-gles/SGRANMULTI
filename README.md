@@ -37,6 +37,7 @@ Args :
 ### SGRAN2MULTI
 
 Args:  
+
 - p0: inskip
 - p1: duration
 - p2: amplitude*  
@@ -57,6 +58,7 @@ Args:
 ### STGRAN2MULTI
 
 Args:  
+
 - p0: inskip  
 - p1: outskip
 - p2: dur  
